@@ -1,4 +1,5 @@
 # Exercise 2 - Work with Data in Azure
+This exercise guides you through the creation of an automated data pipeline that ingests files from an external S3 bucket, divides them based on the project they belong to (as indicated by the file name) and deposits them in your Azure Blob Storage.
 
 ## Contents
 - Exercise 2 - Work with Data in Azure
@@ -9,6 +10,8 @@
     - [Task 4: Create a linked service](#task-4-create-a-linked-service)
     - [Task 5: Create a linked service to an external source](#task-5-create-a-linked-service-to-an-external-source)
     - [Task 6: Create datasets](#task-6-create-datasets)
+    - [Task 7: Create a pipeline](#task-7-create-a-pipeline)
+    - [Task 8: Run the pipeline](#task-8-run-the-pipeline)
 
 
 ## Prerequisites
@@ -185,4 +188,51 @@ In the linked service settings, you specified the S3 bucket that contains the so
 1. Select **+New** to create a new parameter.
 1. For **Name**, enter **container**.
 
-![Create parameter](/img/2.6_outparam.png)
+    ![Create parameter](/img/2.6_outparam.png)
+
+1. Now, select **Connection** to return to the connection tab. 
+1. Select **Container** to spawn the option for dynamic content.
+1. Select **Add dynamic content**.
+    ![Add dynamic content in output dataset file path](/img/2.6_outpath.png)
+1. In the **Add dynamic content** window, select **container**.
+1. Observe that the expression **@dataset().container** is automatically added in the field above. This expression refers to the dataset's container parameter which you created previously.
+1. Select **Finish**.
+    ![Add container parameter as dynamic content](/img/2.6_outdyn.png)
+
+
+## Task 7: Create a pipeline
+In this procedure, you create and validate a pipeline with a copy activity that uses the input and output datasets. The copy activity copies data from the input dataset to the output dataset. To make sure that the files are being copied to the correct container, the copy acticity extracts the value for the container parameter from the name of each file.
+Since each file in our input dataset follows the pattern **project\<number>-\<timestamp>.fq**, you can extract the first eight characters of the filename (e.g. **project1**) to determine the name of one of the containers you previously created in your storage account.
+
+1. Select the **+** (plus) button, and then select **Pipeline**. 
+1. In the General panel under **Properties**, specify **SortAndCopyPipeline** for **Name**. Then collapse the panel by clicking the Properties icon in the top-right corner.
+1. Start by reading the file names in the input dataset. In the **Activities** toolbox, expand **General**. Drag the **Get Metadata** activity from the **Activities** toolbox to the pipeline designer surface on the right. You can also search for activities in the **Activities** toolbox. Specify **GetFileNames** for **Name**.
+    ![Create Get Metadata activity](/img/2.7_getmetadata.png)
+1. Switch to the **Dataset** tab in the Get Metadata activity, and select **InputDataset** for **Dataset**.
+1. Next to **Field list**, select **+New** to specify which metadata you would like to get.
+    ![Specify Get Metadata dataset](/img/2.7_getmetadata_dataset.png)
+1. In the drop-down list under **Argument**, select **Child Items**. This makes the activity return a list of files in the dataset.
+1. To perform an activity repeatedly for each file, a ForEach activity is required. In the **Activities** toolbox, collapse the **General** category, and expand **Iteration & consitionals**. Drag the **ForEach** activity from the **Activities** toolbox to the pipeline designer surface. Specify **ForEachFile** for **Name**.
+    ![Create ForEach activity](/img/2.7_foreach.png)
+1. Connect the two activities by dragging the green rectangle of **GetFileNames** to the **ForEachFile** activity. This specifies the order in which these activities will be executed.
+1. Select the **ForEachFile** activity again and switch to the **Settings** tab.
+1. For **Items**, specify the expression **@activity('GetFileNames').output.childItems**. This expression gets the ForEachFile activity to iterate over the output from the previous GetFileNames activity, i.e. the list of files.
+    ![Specify ForEach settings](/img/2.7_foreach_settings.png)
+1. So far, you have specified to perform some activity for each file. Next, specify which activity should be performed. On the **ForEachFile** activity, switch to the **Activities** tab. Select the pen icon to open this activity's designer surface.
+    ![Open ForEach designer surface](/img/2.7_foreach_activities.png)
+1. In the **Activities** toolbox, expand **Move & Transform**. Drag the **Copy Data** activity from the **Activities** toolbox to the pipeline designer surface. Specify **CopyFile** for **Name**.
+    ![Create copy activity](/img/2.7_copy.png)
+1. Switch to the **Source** tab. For **Source dataset**, select **InputDataset**.
+1. For **File path type**, select **Wildcard path file**. 
+1. For **Wildcard file name**, specify the expression **@item().name**. This ensures that the activity only copies the file in the current iteration.
+    ![Specify copy source](/img/2.7_copy_source.png)
+1. Switch to the **Sink** tab. For **Sink dataset**, specify **OutputDataset**.
+1. Specify a value for the container parameter that you previosuly created in the OutputDataset. In the text field next to **container**, specify the expression **@substring(item().name, 0, 8)**. This expression extracts the first eight characters from the file name, for example 'project1'.
+    ![Specify copy sink](/img/2.7_copy_sink.png)
+1. The pipeline is complete and can now be published. Select **Publish all** in the top. 
+    ![Publish all](/img/2.7_publish.png)
+1. In the **Publish all** window, select **Publish**. This publishes the two datasets and the pipeline.
+    ![Confirm publish all](/img/2.7_publish2.png)
+
+## Task 8: Run the pipeline
+!TODO
