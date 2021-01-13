@@ -10,7 +10,7 @@
 - The passes cannot be used for 3rd party services on Azure 
 - There are restrictions on the type of resources which can be provisioned and the regions in which they can be created
 
-At this time the closest region with the best performance is West Europe / Amsterdam. On December 7th it was announced that there will be a "Denmark East" region. Details are provided here: https://news.microsoft.com/da-dk/features/et-gront-digitalt-fremtidslofte/
+At this time the closest region with the best performance is West Europe / Amsterdam. On December 7th 2020 it was announced that there will be a "Denmark East" region in the future. Details are provided here: https://news.microsoft.com/da-dk/features/et-gront-digitalt-fremtidslofte/
 
 
 
