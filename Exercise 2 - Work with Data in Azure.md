@@ -67,6 +67,7 @@ Azure Blob storage is Microsoft's object storage solution for the cloud. Blob st
 In this section, you create a blob container named **adftutorial** in Azure Blob storage.
 
 1. From the storage account page, select **Overview** > **Containers**.
+
 ![Containers](/img/2.2_containers.png)
 
 1. On the *\<Account name>* | **Containers** page's toolbar, select **+ Container**.
@@ -326,7 +327,7 @@ In this procedure, you trigger the pipeline and monitor its run. Then, you obser
 1. Under **Activity runs**, your activities are listed. Observe their status. Select **Refresh** until for **Status** all activities show **Succeeded**.
 
     ![Monitor activity runs](/img/2.8_monitor2.png)
-    
+
 1. Now, ensure that the files have been copied correctly. Return to the tab in your browser that shows your storage account. If you are not currently located in a container, select one of your containers. Else, select **Refresh** to update the container contents. You should now find all files starting with 'project1', 'project2', etc. in the container of the same name. 
 
 ## Potential next steps
