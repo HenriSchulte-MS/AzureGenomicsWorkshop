@@ -137,7 +137,7 @@ In the previous task, you have created a linked service to a storage account in 
 
    e. Select **Create** to save the linked service. 
 
-      ![Linked service](img/2.5_s3.png)
+      ![Linked service](/img/2.5_s3.PNG)
 
 
 ## Task 6: Create datasets
@@ -198,7 +198,7 @@ In the linked service settings, you specified the S3 bucket that contains the so
 1. In the **Add dynamic content** window, select **container**.
 1. Observe that the expression **@dataset().container** is automatically added in the field above. This expression refers to the dataset's container parameter which you created previously.
 1. Select **Finish**.
-    ![Add container parameter as dynamic content](/img/2.6_outdyn.png)
+![Add container parameter as dynamic content](/img/2.6_outdyn.png)
 
 
 ## Task 7: Create a pipeline
@@ -257,4 +257,4 @@ In this procedure, you trigger the pipeline and monitor its run. Then, you obser
 ## Potential next steps
 You completed this hands-on lab, but you can keep experimenting with Azure.
 In a real-life scenario, access control could be used to allow access to a given project container only for members of that specific project.
-Additionally, instead of triggering the pipeline manually, you could configure it to trigger in certain intervals or when certain events occurr.
+Additionally, instead of triggering the pipeline manually, you could configure it to trigger in certain intervals or when certain events occur.
