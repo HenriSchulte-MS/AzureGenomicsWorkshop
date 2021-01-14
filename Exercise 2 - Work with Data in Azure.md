@@ -12,6 +12,7 @@ This exercise guides you through the creation of an automated data pipeline that
     - [Task 6: Create datasets](#task-6-create-datasets)
     - [Task 7: Create a pipeline](#task-7-create-a-pipeline)
     - [Task 8: Run the pipeline](#task-8-run-the-pipeline)
+    - [Potential next steps](#potential-next-steps)
 
 
 ## Prerequisites
@@ -235,4 +236,25 @@ Since each file in our input dataset follows the pattern **project\<number>-\<ti
     ![Confirm publish all](/img/2.7_publish2.png)
 
 ## Task 8: Run the pipeline
-!TODO
+In this procedure, you trigger the pipeline and monitor its run. Then, you observe the output in your storage account.
+
+1. Before running the pipeline, see that your previously created blob storage containers do not contain any data yet. In a new tab of your browser, navigate to **portal.azure.com**, and sign in if required.
+1. On the landing page, under **Recent resources**, select your storage account. If your storage account is not visible there, you can find it via the resource group or the search bar.
+    ![Find storage account](/img/2.8_storage.png)
+1. From the storage account page, select **Overview** > **Containers**.
+    ![Containers](/img/2.2_containers.png)
+1. One the Containers page, select one of your containers to open it. Observe that it currently shows 'No results', as no data has been deposited into the container yet. This will change once the pipeline has executed. Leave this browser tab open to check later.
+1. Return to the browser tab that shows **Data Factory**. If you have left the pipeline's designer surface, return to it by selecting **Author** on the left. Then, select **SortAndCopyPipeline**.
+1. In the top of the designer surface, select **Add trigger**. Then, select **Trigger now**. On the **pipeline run** window, select **OK** to run the pipeline.
+    ![Trigger pipeline](/img/2.8_trigger.png)
+1. On the left, select **Monitor**. Then, under **Dashboard**, select **Pipeline runs**.
+1. Ensure that you are on the **Triggered** tab, then select **SortAndCopyPipeline**.
+    ![Monitor pipeline](/img/2.8_monitor.png)
+1. Under **Activity runs**, your activities are listed. Observe their status. Select **Refresh** until for **Status** all activities show **Succeeded**.
+    ![Monitor activity runs](/img/2.8_monitor2.png)
+1. Now, ensure that the files have been copied correctly. Return to the tab in your browser that shows your storage account. If you are not currently located in a container, select one of your containers. Else, select **Refresh** to update the container contents. You should now find all files starting with 'project1', 'project2', etc. in the container of the same name. 
+
+## Potential next steps
+You completed this hands-on lab, but you can keep experimenting with Azure.
+In a real-life scenario, access control could be used to allow access to a given project container only for members of that specific project.
+Additionally, instead of triggering the pipeline manually, you could configure it to trigger in certain intervals or when certain events occurr.
