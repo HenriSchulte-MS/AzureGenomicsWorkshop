@@ -85,7 +85,7 @@ Note: You can also use [Windows Terminal](https://docs.microsoft.com/windows/ter
 
 The Linux VM is already provisioned with X2Go Server and ready to accept client connections. To connect to the Linux VM graphical desktop, complete the following procedure on your client:
 
-1. Download and install the X2Go client for your client platform from X2Go. You may have to give X2Go permission to bypass your firewall to finish connecting.
+1. Download and install the X2Go client for your client platform from [X2Go](https://wiki.x2go.org/doku.php/doc:installation:x2goclient). You may have to give X2Go permission to bypass your firewall to finish connecting.
 
 2. Make note of the virtual machine's public IP address, which you can find in the Azure portal by opening the virtual machine you created.
 
