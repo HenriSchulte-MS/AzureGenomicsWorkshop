@@ -2,7 +2,7 @@
 
 1. In order to complete this workshop on Azure you need to have a Microsoft Account (E.g. outlook, live, hotmail). You should not use your organizational credentials, as it might not work properly.
 
-1. Some parts of the Azure user interface are currently only supported in the Microsoft Edge or Google Chrome browser. Please make sure you have either installed to be able to complete the hands-on lab.
+1. The Azure Portal currently functions best in Microsoft Edge or Google Chrome. We recommend you use eihter of these browsers during the hands-on labs for an optimal experience.
 
 1. For this workshop we are providing you with an Azure Pass, which is a time limited credit to use Azure services. We will provide you with a promo code for the workshop. The passes can be redeemed by following the process here: https://www.microsoftazurepass.com/Home/HowTo?Length=5. 
 
