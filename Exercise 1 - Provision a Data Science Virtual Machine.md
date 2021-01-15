@@ -109,7 +109,9 @@ The Linux VM is already provisioned with X2Go Server and ready to accept client 
 
 8. Select OK.
 
-9. You should now see the graphical interface for your Ubuntu DSVM.
+9. You should now see the graphical interface for your Ubuntu DSVM. Open RStudio from the Dekstop.
+
+10. Execute a command in the RStudio console, for example **demo(lm.glm)**.
 
 
 ### Task 3: JupyterHub and JupyterLab
