@@ -1,19 +1,19 @@
 # Exercise 1: Provision a Data Science Virtual Machine
 
   - [Exercise 1: Provision a Data Science Virtual Machine](#exercise-1-provision-datascience-vm)
-    - [Task 1: Create a VM](#task-1-create-a-vm)
-    - [Task 2: Install BWA](#task-2-install-bmw)
+    - [Task 1: Create a VM](#task-1)
+    
+    - [Task 2: Accessing the Ubuntu Data Science Virtual Machine - Graphical session](#task-2)
+
+    - [Task 3: JupyterHub and JupyterLab](#task-3)
+
+    - [Task 4: Testing a bioinformatics workflow](#task-4)
 
 
-## Exercise 1: Provision a Data Science Virtual Machine
-
-Duration: 30 minutes
-
-In this exercise, you will setup your environment to work with Azure.
 
 ### Task 1: Create a VM
 
-1. In the [Azure portal](https://portal.azure.com/), select the **Show portal menu** icon and then select **+Create a resource** from the menu.
+1. In the [Azure portal](https://portal.azure.com/), select **+Create a resource** from the menu.
 
     ![The Show portal menu icon is highlighted, and the portal menu is displayed. Create a resource is highlighted in the portal menu.](img/create-a-resource.png "Create a resource")
 2. In Azure Marketplace, search for "Data Science Virtual Machine - Ubuntu 18.04" or select AI + Machine Learning and click Learn More on the Data Science Virtual Machine - Ubuntu 18.04 
@@ -35,16 +35,12 @@ In this exercise, you will setup your environment to work with Azure.
         - **Region**: Select the region you are using for resources in this hands-on lab.
         - **Availability options**: Set to no infrastructure redundancy required.
         - **Image**: Leave the Data Science Virtual Machine - Ubuntu 18.04 - Gen 1 selected.
-        - **Size**: Select the size (e.g., Standard D2s_v3).
+        - **Size**: Select the size Standard_D8s_v3. You can resize the VM after creation at any time depending on your requirements (scaling up or down).
 
     - **Administrator account**
         - **Authentication type**: Select **Password**.
         - **Username**: labuser
         - **Password**: _Enter a valid password that you will remember_.
-
-    - **Inbound port rules**
-        - **Public inbound ports**: Select Allow selected ports.
-        - **Select inbound ports**: Select SSH (22) from the list.
 
     ![The values specified above are entered into the Create a virtual machine Basics tab.](img/basics.PNG "Create a virtual machine Basics tab")
 
@@ -66,7 +62,7 @@ In this exercise, you will setup your environment to work with Azure.
 
     ![Under Connect, the command to connect to the VM displays.](img/ssh.PNG "SSH command line")
 
-11. A dialog will appear showing the SSH command line to use to connect to the VM. It includes the VM username (labuser in the below) and IP address  used to access the VM. **Important**: Paste the command in a text editor and **remove** `-i <private key path>` so you have a command similar to `ssh labuser@20.67.86.249` (with your VM's IP address).
+11. A dialog will appear showing the SSH command line to use to connect to the VM. It includes the VM username (labuser in the below) and IP address  used to access the VM.
 
 12. Open Cloud Shell in Azure Portal
 
@@ -89,7 +85,7 @@ Note: You can also use [Windows Terminal](https://docs.microsoft.com/windows/ter
 
 The Linux VM is already provisioned with X2Go Server and ready to accept client connections. To connect to the Linux VM graphical desktop, complete the following procedure on your client:
 
-1. Download and install the X2Go client for your client platform from X2Go. You may have to give X2Go permission to bypass your firewall to finish connecting.
+1. Download and install the X2Go client for your client platform from [X2Go](https://wiki.x2go.org/doku.php/doc:installation:x2goclient). You may have to give X2Go permission to bypass your firewall to finish connecting.
 
 2. Make note of the virtual machine's public IP address, which you can find in the Azure portal by opening the virtual machine you created.
 
@@ -118,6 +114,7 @@ The Linux VM is already provisioned with X2Go Server and ready to accept client 
 
 ### Task 3: JupyterHub and JupyterLab
 
+
 The Ubuntu DSVM runs JupyterHub, a multiuser Jupyter server. To connect, take the following steps:
 
 1. Make note of the public IP address for your VM, by searching for and selecting your VM in the Azure portal.
@@ -128,8 +125,52 @@ The Ubuntu DSVM runs JupyterHub, a multiuser Jupyter server. To connect, take th
 
 4. Enter the username and password that you used to create the VM, and sign in.
 
-    ![Jupyter](img/jupyter.PNG "Jupyter")
+    ![Jupyter](img/jupyter.png "Jupyter")
 
 5. Browse the many sample notebooks that are available.
 
 JupyterLab, the next generation of Jupyter notebooks and JupyterHub, is also available. To access it, sign in to JupyterHub, and then browse to the URL https://your-vm-ip:8000/user/your-username/lab, replacing "your-username" with the username you chose when configuring the VM. 
+
+
+
+### Task 4: Testing a bioinformatics workflow
+
+1. Open the cloud shell and connect to your Data Science VM. Execute the SSH command (e.g. `ssh labuser@20.67.86.249` with your VM's IP address) to connect to the VM. Enter your VM password when prompted.
+
+    ![An SSH shell prompt window displays commands.](img/ssh-command.PNG "SSH window")
+
+
+2. Install necessary tools.
+
+    ```bash
+    sudo apt-get install -y bwa
+    sudo apt install -y samtools
+    sudo apt install -y bcftools
+    ```
+
+3. We created a storage account with a file share where the fastq files were added. Ask the your trainers for the credentials to mount the share on your VM.
+
+4. Check that the share was mounted. You should be able to see the data and ref directories with the fastq files.
+
+    ```bash
+    cd /mnt/share
+    ls
+    ```
+
+5. Create a directory and copy the data locally. The copy command will take a few minutes as 500MB are being copied.
+    ```bash
+    cd ~
+    mkdir workshop
+    cp -r /mnt/share/* workshop
+    cd workshop
+    ```
+
+6. From the workshop directory, run the following commands individually to test one of classical bioinformatics workflows.
+    ```bash
+    bwa index ref/90-11-287_chr1_chr2_pJM1.fasta
+    bwa mem ref/90-11-287_chr1_chr2_pJM1.fasta data/fastq/sub_R1.fa.gz data/fastq/sub_R2.fa.gz > data/aln/aln.sam 
+    samtools view -@ 4 -h -S -b -o data/aln/aln.bam data/aln/aln.sam 
+    samtools sort -T /tmp/aln.sorted -o data/aln/aln_sorted.bam data/aln/aln.bam 
+    samtools index data/aln/aln_sorted.bam 
+    bcftools mpileup -Ou -f ref/90-11-287_chr1_chr2_pJM1.fasta data/aln/aln_sorted.bam | bcftools call -mv -o output.vcf
+    ```
