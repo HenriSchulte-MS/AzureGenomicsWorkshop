@@ -1,5 +1,8 @@
 # Exercise 2 - Work with Data in Azure
-This exercise guides you through the creation of an automated data pipeline that ingests files from an external S3 bucket, divides them based on the project they belong to (as indicated by the file name) and deposits them in your Azure Blob Storage.
+This lab will familiarize you with automating data workflows through a scenario that you might encounter in your work: You have an external data source (an Amazon S3 bucket in this case) that is filled with files from different projects. You want to automatically loads the data from that source into Azure and sort it based on the project it belongs to. 
+To solve this, you will create automated data pipeline that ingests files from an external S3 bucket, divides them based on the project they belong to (as indicated by the file name) and deposits them in your Azure Blob Storage. Your final result will look similar to the diagram below.
+
+![Lab 2 Diagram](/img/2.0_architecture.png)
 
 ## Contents
 - Exercise 2 - Work with Data in Azure
